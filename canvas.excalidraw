@@ -147,21 +147,6 @@
       "updated": 1789249478393,
       "link": "https://www.youtube.com/watch?v=e7AvdrxsbaU&t=118s",
       "locked": false
-    },
-    {
-      "id": "mtzsuuxbjp5hthu2us8",
-      "repo": "wtf403/factory",
-      "type": "rectangle",
-      "x": 10,
-      "y": 10,
-      "width": 120,
-      "height": 60,
-      "createdAt": "2026-09-13T12:38:03.023Z",
-      "updatedAt": "2026-09-13T12:38:03.023Z",
-      "version": 1,
-      "label": {
-        "text": "mcpv2-live-test"
-      }
     }
   ]
 }
