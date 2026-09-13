@@ -4,36 +4,6 @@
   "source": "excalidrop",
   "elements": [
     {
-      "id": "8P59bpzkPI2W_VuuFHHwA",
-      "type": "embeddable",
-      "x": 167.052963535203,
-      "y": -776.4547958551584,
-      "width": 1012.802943801916,
-      "height": 556.7391078527385,
-      "angle": 0,
-      "strokeColor": "transparent",
-      "backgroundColor": "transparent",
-      "fillStyle": "solid",
-      "strokeWidth": 2,
-      "strokeStyle": "solid",
-      "roughness": 1,
-      "opacity": 100,
-      "groupIds": [],
-      "frameId": null,
-      "index": "a2",
-      "roundness": {
-        "type": 3
-      },
-      "seed": 871738792,
-      "versionNonce": 1660363942,
-      "isDeleted": false,
-      "boundElements": null,
-      "updated": 1789311246791,
-      "link": "https://www.youtube.com/watch?v=T2W0nIEQIgc",
-      "locked": false,
-      "version": null
-    },
-    {
       "id": "227Eb-SmapuRmEShoqmCB",
       "type": "embeddable",
       "x": 168.32236574684418,
