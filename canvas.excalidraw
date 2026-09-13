@@ -434,6 +434,36 @@
       "originalText": "GH AW",
       "autoResize": true,
       "lineHeight": 1.25
+    },
+    {
+      "id": "mYaQANjmrJOtkU0io-cYU",
+      "type": "embeddable",
+      "x": 1658.1823092125746,
+      "y": 2511.5639857477763,
+      "width": 2520.15625,
+      "height": 968.8022532763927,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aJ",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 985326528,
+      "version": 40,
+      "versionNonce": 799652800,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1789318089453,
+      "link": "https://wtf403.github.io/factory/",
+      "locked": false
     }
   ],
   "files": {}
