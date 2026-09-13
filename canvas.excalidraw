@@ -30,8 +30,7 @@
       "boundElements": null,
       "updated": 1789310688008,
       "link": "https://www.youtube.com/watch?v=-QFHIoCo-Ko",
-      "locked": false,
-      "version": null
+      "locked": false
     },
     {
       "id": "LWb6EpCxxGi3Fp7NgtuT6",
@@ -60,8 +59,7 @@
       "boundElements": null,
       "updated": 1789310688008,
       "link": "https://www.youtube.com/watch?v=AbpyqAfxZ8c",
-      "locked": false,
-      "version": null
+      "locked": false
     },
     {
       "id": "70WeAt-3MauYoUcGFn5GJ",
@@ -90,8 +88,7 @@
       "boundElements": null,
       "updated": 1789310688008,
       "link": "https://www.youtube.com/watch?v=e7AvdrxsbaU&t=118s",
-      "locked": false,
-      "version": null
+      "locked": false
     },
     {
       "id": "4Nvv_EZoReJG-p6y6flIn",
@@ -115,12 +112,41 @@
         "type": 3
       },
       "seed": 1561909626,
-      "version": 66,
       "versionNonce": 120573606,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1789311122792,
       "link": "https://github.com/githubnext/agentics/blob/main/docs/repo-assist.md",
+      "locked": false
+    },
+    {
+      "id": "pyfFI5Bmwe6jvK7sV_y7p",
+      "type": "embeddable",
+      "x": 1427.1630788780749,
+      "y": -69.1455025970937,
+      "width": 560,
+      "height": 315,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a8",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1065379904,
+      "version": 29,
+      "versionNonce": 1937120192,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1789316641889,
+      "link": "https://www.youtube.com/watch?v=BHxFTn0d3Zw",
       "locked": false
     }
   ],
