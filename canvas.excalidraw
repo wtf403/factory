@@ -259,6 +259,36 @@
       "originalText": "Good engineering on how we can modify the harness without breaking it",
       "autoResize": true,
       "lineHeight": 1.25
+    },
+    {
+      "id": "0Vt9wKnp_A35ifCU96eCu",
+      "type": "embeddable",
+      "x": 4353.637488371568,
+      "y": -1002.3117191760274,
+      "width": 560,
+      "height": 864.3112244606909,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aE",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1290476480,
+      "version": 100,
+      "versionNonce": 41242688,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1789316870451,
+      "link": "https://github.com/karpathy/autoresearch",
+      "locked": false
     }
   ],
   "files": {}
