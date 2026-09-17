@@ -95,7 +95,7 @@
       "type": "text",
       "x": -979.648646468719,
       "y": -973.8367425610319,
-      "width": 329.572509765625,
+      "width": 403.10211181640625,
       "height": 77.68329920075101,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -110,11 +110,11 @@
       "index": "aH",
       "roundness": null,
       "seed": 229411776,
-      "version": 1,
-      "versionNonce": 1159869376,
+      "version": 2,
+      "versionNonce": 284637986,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1789578230110,
+      "updated": 1789611007019,
       "link": null,
       "locked": false,
       "text": "Dark Factory",
@@ -151,7 +151,7 @@
       "versionNonce": 1130673088,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1789578230112,
+      "updated": 1789611000164,
       "link": null,
       "locked": false,
       "text": "GH AW",
@@ -217,7 +217,7 @@
       "versionNonce": 720539931,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1789578230114,
+      "updated": 1789611000166,
       "link": null,
       "locked": false,
       "text": "All current solutions built on top of DAG (direct acyclic graphs)\n\nCloudflare workflows built on top of durable objects\n\nGithub agentic workflows\ncompile workflow.md into actions.yml \n\nGoogle ADK\nhttps://codelabs.developers.google.com/adk2",
@@ -292,7 +292,7 @@
         1
       ],
       "crop": null,
-      "version": 2
+      "version": 1
     },
     {
       "id": "_yzs2Sa5_qc_JFve_9HQ-",
@@ -334,7 +334,7 @@
         "naturalWidth": 830,
         "naturalHeight": 374
       },
-      "version": 2
+      "version": 1
     }
   ],
   "files": {
