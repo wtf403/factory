@@ -1,7 +1,7 @@
 name: "Copilot Setup Steps"
 
-# Automatically run the setup steps when they are changed to allow for easy validation, and
-# allow manual testing through the repository's "Actions" tab
+# Smoke test: proves GitHub dispatches jobs to our self-hosted ARC fleet.
+# Runs on ARC (not GitHub-hosted) whenever this file changes or manually.
 on:
   workflow_dispatch:
   push:
@@ -12,41 +12,25 @@ on:
       - .github/workflows/copilot-setup-steps.yml
 
 jobs:
-  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  # The job MUST be called `copilot-setup-steps` or Copilot will ignore it.
   copilot-setup-steps:
-    # ARC runner scale sets on se1/nl1 (see infra notes). Must match the
-    # Helm installation name used with the gha-runner-scale-set chart.
+    # ARC runner scale sets on se1/nl1. Must match the Helm installation
+    # name used with the gha-runner-scale-set chart.
     runs-on: arc-runner-set
 
-    # Set the permissions to the lowest permissions possible needed for your steps.
-    # Copilot will be given its own token for its operations.
     permissions:
       contents: read
 
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version: 1.26.6
-          cache: true
-
-      - name: Set up Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 22.22.2
-          cache: npm
-          cache-dependency-path: internal/controlplane/web/package-lock.json
-
-      - name: Install frontend dependencies
-        working-directory: internal/controlplane/web
-        run: npm ci
-
-      - name: Verify Go toolchain
-        run: test "$(go env GOVERSION)" = "go1.26.6"
+      - name: Prove we run on ARC
+        run: |
+          echo "hostname=$(hostname)"
+          echo "os=$(uname -a)"
+          echo "runner=${RUNNER_NAME:-unknown}"
