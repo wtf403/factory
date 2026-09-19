@@ -14,7 +14,7 @@ on:
 jobs:
   # The job MUST be called `copilot-setup-steps` or Copilot will ignore it.
   copilot-setup-steps:
-    # ARC runner scale sets on se1/nl1. Must match the Helm installation
+    # ARC runner scale set on us1. Must match the Helm installation
     # name used with the gha-runner-scale-set chart.
     runs-on: arc-runner-set
 
@@ -34,3 +34,20 @@ jobs:
           echo "hostname=$(hostname)"
           echo "os=$(uname -a)"
           echo "runner=${RUNNER_NAME:-unknown}"
+
+      # BYOK provider override: expose Actions secrets as COPILOT_* env vars
+      # so every later step in this job (including the Copilot agent harness)
+      # inherits them. Values stay masked in logs. Add the secrets under
+      # repo Settings -> Secrets and variables -> Actions when ready:
+      #   COPILOT_PROVIDER_TYPE, COPILOT_PROVIDER_BASE_URL,
+      #   COPILOT_MODEL, COPILOT_PROVIDER_API_KEY
+      - name: Export BYOK provider config
+        run: |
+          for v in COPILOT_PROVIDER_TYPE COPILOT_PROVIDER_BASE_URL COPILOT_MODEL COPILOT_PROVIDER_API_KEY; do
+            echo "${v}=${!v}" >> "$GITHUB_ENV"
+          done
+        env:
+          COPILOT_PROVIDER_TYPE: ${{ secrets.COPILOT_PROVIDER_TYPE }}
+          COPILOT_PROVIDER_BASE_URL: ${{ secrets.COPILOT_PROVIDER_BASE_URL }}
+          COPILOT_MODEL: ${{ secrets.COPILOT_MODEL }}
+          COPILOT_PROVIDER_API_KEY: ${{ secrets.COPILOT_PROVIDER_API_KEY }}
