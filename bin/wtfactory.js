@@ -24,6 +24,7 @@ init options:
   --pi-base <url>       Pi gateway base URL
   --pi-model <name>     Pi model id
   --board-url <url>     reuse existing board, skip creation
+  --no-app              skip opening the App install page
   --dry-run             print the plan, change nothing
   --yes                 skip confirmations where safe
 `);
@@ -106,7 +107,7 @@ async function cmdInit() {
   }
   const owner = repo.split('/')[0];
 
-  await stepApp({ appSlug: opts.appSlug, dry });
+  await stepApp({ appSlug: opts.appSlug, dry, skip: Boolean(flag('no-app', false)) });
   let boardUrl = opts.boardUrl;
   if (!boardUrl) {
     try {
