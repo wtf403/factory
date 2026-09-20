@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Create wtfactory App</title></head>
+<body>
+<h1>Create the wtfactory GitHub App</h1>
+<p>Logged in as the App owner, click the button. Then install it and run:</p>
+<pre>npx wtfactory init OWNER/REPO --app &lt;slug&gt;</pre>
+<form action="https://github.com/settings/apps/new?state=wtfactory-init" method="post">
+  <input type="hidden" name="manifest" id="manifest">
+  <button type="submit">Create GitHub App from manifest</button>
+</form>
+<p>For an organization: change the form action to
+<code>https://github.com/organizations/ORG/settings/apps/new</code>.</p>
+<script>
+fetch('app-manifest.json').then(r => r.text()).then(t => {
+  document.getElementById('manifest').value = t;
+});
+</script>
+</body>
+</html>

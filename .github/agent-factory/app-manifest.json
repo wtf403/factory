@@ -1,0 +1,32 @@
+{
+  "name": "wtfactory",
+  "url": "https://github.com/wtf403/factory",
+  "description": "Factory installer: Projects board + Agentic Workflows + ARC runner for any repo.",
+  "public": false,
+  "hook_attributes": { "url": "", "active": false },
+  "default_permissions": {
+    "contents": "write",
+    "issues": "write",
+    "pull_requests": "write",
+    "actions": "write",
+    "checks": "read",
+    "secrets": "write",
+    "variables": "write",
+    "environments": "write",
+    "organization_projects": "write",
+    "repository_projects": "write",
+    "members": "read",
+    "metadata": "read"
+  },
+  "default_events": [
+    "installation",
+    "installation_repositories",
+    "issues",
+    "issue_comment",
+    "pull_request",
+    "pull_request_review",
+    "label",
+    "workflow_run",
+    "workflow_dispatch"
+  ]
+}
