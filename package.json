@@ -1,6 +1,6 @@
 {
   "name": "wtfactory",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "One-command installer: GitHub App + Projects board + Agentic Workflows + ARC runner for any repo",
   "type": "module",
   "bin": {
