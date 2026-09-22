@@ -1,0 +1,31 @@
+{
+  "name": "wtfactory",
+  "version": "0.1.4",
+  "description": "One-command installer: GitHub App + Projects board + Agentic Workflows + ARC runner for any repo",
+  "type": "module",
+  "bin": {
+    "wtfactory": "bin/wtfactory.js"
+  },
+  "scripts": {
+    "test": "node --check bin/wtfactory.js && node --check lib/gh.js && node --check lib/board.js && node --check lib/app.js && node --check lib/arc.js && node --check lib/setup.js && echo OK"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.9.1",
+    "open": "^10.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "files": [
+    "bin/**/*",
+    "lib/**/*",
+    "templates/**/*",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wtf403/wtfactory.git"
+  },
+  "homepage": "https://github.com/wtf403/wtfactory#readme"
+}

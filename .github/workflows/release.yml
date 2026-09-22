@@ -1,0 +1,210 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      publish_npm:
+        description: 'Publish to NPM'
+        type: boolean
+        default: false
+      npm_tag:
+        description: 'NPM dist-tag (latest, beta, next)'
+        default: 'latest'
+
+permissions:
+  contents: write
+  id-token: write # npm provenance
+  actions: write # auto-publish dispatches the release run explicitly (pushes
+  # made with GITHUB_TOKEN never trigger workflow runs on their own)
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Install & Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+      - run: npm test
+
+      - name: Verify package contents
+        run: |
+          test -f bin/wtfactory.js || (echo "bin/wtfactory.js missing" && exit 1)
+          test -f lib/setup.js || (echo "lib/setup.js missing" && exit 1)
+          test -f templates/factory.md || (echo "templates/factory.md missing" && exit 1)
+          npm pack --dry-run 2>&1 | tail -5
+          echo "package contents OK"
+
+      - name: Dry-run installer
+        run: node bin/wtfactory.js init octo/nope --dry-run --app wtfactory || true
+
+  auto-publish:
+    name: Auto-version & Publish trigger
+    # Every push to main ships: pick the next version missing from BOTH npm
+    # and the remote tags, tag it, and let the tag-triggered run do the
+    # actual release + npm publish. Manual version bumps are respected.
+    # Loop guard: skips pushes whose message starts with "chore: release v".
+    # (Do NOT use [skip ci] on the version commit — GitHub also skips tag
+    # pushes pointing at it, which stillborns the release.)
+    runs-on: ubuntu-latest
+    if: "github.ref == 'refs/heads/main' && github.event_name == 'push' && contains(github.event.head_commit.message, 'chore: release v') == false"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Pick next unpublished version, tag it
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          CURRENT=$(node -p "require('./package.json').version")
+          VERSION="$CURRENT"
+          # Skip numbers already on npm OR already tagged remotely (a tag
+          # whose release never published must not be reused/retagged).
+          while npm view "wtfactory@${VERSION}" version >/dev/null 2>&1 \
+            || git ls-remote --tags origin "refs/tags/v${VERSION}" | grep -q .; do
+            VERSION=$(node -e 'const [M, m, p] = process.argv[1].split(".").map(Number); console.log(`${M}.${m}.${p + 1}`);' "$VERSION")
+          done
+          if [ "$VERSION" != "$CURRENT" ]; then
+            node -e '
+              const fs = require("fs");
+              const v = process.argv[1];
+              const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+              pkg.version = v;
+              fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+              const lock = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
+              lock.version = v;
+              if (lock.packages && lock.packages[""]) lock.packages[""].version = v;
+              fs.writeFileSync("package-lock.json", JSON.stringify(lock, null, 2) + "\n");
+            ' "$VERSION"
+            git add package.json package-lock.json
+            git commit -m "chore: release v${VERSION}"
+            git pull --rebase origin main
+          fi
+          git tag "v${VERSION}"
+          git push origin HEAD:main "v${VERSION}"
+          echo "Tagged release v${VERSION}"
+          # Pushes made with GITHUB_TOKEN never trigger workflow runs, so the
+          # tag push above would NOT start the release run — kick it off
+          # explicitly via the API (API-triggered dispatches do run).
+          gh workflow run "Release" --ref "v${VERSION}" -f publish_npm=true
+          echo "Dispatched release run for v${VERSION}"
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s (%h)" HEAD)
+          else
+            COMMITS=$(git log --pretty=format:"- %s (%h)" ${PREV_TAG}..HEAD)
+          fi
+          {
+            echo "changelog<<EOF"
+            echo "## What's Changed"
+            echo ""
+            echo "${COMMITS}"
+            echo ""
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...v${VERSION}"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create release archive
+        run: |
+          tar -czf wtfactory-${{ steps.changelog.outputs.version }}.tar.gz \
+            bin/ lib/ templates/ package.json README.md
+          sha256sum wtfactory-${{ steps.changelog.outputs.version }}.tar.gz > checksums.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.changelog.outputs.version }}
+          name: Release v${{ steps.changelog.outputs.version }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          files: |
+            wtfactory-${{ steps.changelog.outputs.version }}.tar.gz
+            checksums.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-npm:
+    name: Publish to NPM
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      (startsWith(github.ref, 'refs/tags/v') ||
+       github.event.inputs.publish_npm == 'true')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Get package version
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Check if version exists
+        id: check
+        run: |
+          if npm view wtfactory@${{ steps.version.outputs.version }} version 2>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to NPM
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          TAG="${{ github.event.inputs.npm_tag || 'latest' }}"
+          npm publish --tag $TAG --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Skip (version exists)
+        if: steps.check.outputs.exists == 'true'
+        run: echo "Version ${{ steps.version.outputs.version }} already exists on NPM"
